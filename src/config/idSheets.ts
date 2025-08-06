@@ -5,6 +5,6 @@
 // CMJ/
 export const APIKEY = 'AIzaSyCNy_Lm0M11a4y_M5erDHFzLk-TBhrnZkk';
 export const SPREADSHEET_ID = '1Ab3Cy1ZBMtyeHbSSfJblQtFQg3YO-vpZnvHDCtSRxTM';
-export const SHEET_NAME_ACTIVIDADES = 'Actividades'; // Asegúrate de que este sea el nombre correcto de tu pestaña
+export const SHEET_NAME_ACTIVIDADES = 'Eventos'; // Asegúrate de que este sea el nombre correcto de tu pestaña
 export const SHEET_NAME_DONACIONES = 'Donaciones'; // Asegúrate de que este sea el nombre correcto de tu pestaña
 export const SHEET_NAME_PATROCINADORES = 'Patrocinadores'; // Asegúrate de que este sea el nombre correcto de tu pestaña
