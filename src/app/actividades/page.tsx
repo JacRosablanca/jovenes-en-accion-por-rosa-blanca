@@ -20,6 +20,8 @@ export default function ActividadesPage() {
   const [actividades, setActividades] = useState<Actividad[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Estado para la imagen seleccionada
+  const [isImageLoading, setIsImageLoading] = useState<boolean>(false); // Estado para controlar la carga de la imagen
 
   // Define el rango de la hoja de cálculo, ahora hasta la columna G para Link Facebook
   const ACTIVIDADES_RANGE = `${SHEET_NAME_ACTIVIDADES}!A1:G`;
@@ -35,6 +37,27 @@ export default function ActividadesPage() {
       return "";
     }
     return value.trim();
+  };
+
+  // Manejador de clic en la imagen
+  const handleImageClick = (imageUrl: string) => {
+    setIsImageLoading(true); // Se inicia el estado de carga
+    const img = new window.Image();
+    img.src = imageUrl;
+    img.onload = () => {
+      setSelectedImage(imageUrl);
+      setIsImageLoading(false);
+    };
+    img.onerror = () => {
+      console.error("Error al cargar la imagen seleccionada.");
+      setIsImageLoading(false);
+      setSelectedImage(null); // O manejar el error de otra manera
+    };
+  };
+
+  // Manejador para cerrar el modal
+  const handleCloseModal = () => {
+    setSelectedImage(null);
   };
 
   // Efecto para cargar las actividades desde la hoja de cálculo
@@ -108,24 +131,27 @@ export default function ActividadesPage() {
         {actividades.map((actividad, idx) => (
           <div
             key={idx}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 flex flex-col"
           >
-            <div className="relative w-full h-48">
+            <div 
+              className="relative w-full h-48 flex-shrink-0 cursor-pointer"
+              onClick={() => handleImageClick(actividad.Foto || "/LogoJac.png")}
+            >
               <Image
                 src={actividad.Foto || "/LogoJac.png"} // Usa la URL de la columna 'Foto' o el fallback
                 alt={actividad.Actividad} // Usa el título de la actividad
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain" // Muestra la imagen completa sin recortar
                 className="rounded-t-xl"
                 onError={(e) => { e.currentTarget.src = "/LogoJac.png"; }} // Fallback en caso de error de carga de imagen
               />
             </div>
-            <div className="p-6">
+            <div className="p-6 flex-grow flex flex-col">
               <h2 className="text-xl font-bold text-[#19295A] dark:text-blue-300 mt-2">
                 {actividad.Actividad}
               </h2>
               {actividad.Descripcion && (
-                <p className="text-gray-700 dark:text-gray-200 mt-3 text-base">
+                <p className="text-gray-700 dark:text-gray-200 mt-3 text-base flex-grow">
                   {actividad.Descripcion}
                 </p>
               )}
@@ -137,24 +163,60 @@ export default function ActividadesPage() {
                 </div>
               )}
               {actividad.LinkFacebook && (
-                <Link
-                  href={actividad.LinkFacebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold"
-                >
-                  {/* Icono de Facebook (puedes reemplazarlo por un SVG o un icono de librería) */}
-                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14 13.5h2V16h-2v3h-3v-3H9v-2h2v-2c0-1.66 1.34-3 3-3h2v2h-2c-.55 0-1 .45-1 1v2z"/>
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                  </svg>
-                  Ver en Facebook
-                </Link>
+                <div className="mt-4">
+                  <Link
+                    href={actividad.LinkFacebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold text-center"
+                  >
+                    {/* Icono de Facebook (puedes reemplazarlo por un SVG o un icono de librería) */}
+                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14 13.5h2V16h-2v3h-3v-3H9v-2h2v-2c0-1.66 1.34-3 3-3h2v2h-2c-.55 0-1 .45-1 1v2z"/>
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Ver en Facebook
+                  </Link>
+                </div>
               )}
             </div>
           </div>
         ))}
       </div>
+      
+      {/* Modal para la imagen ampliada */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-50 bg-black bg-opacity-75 flex justify-center items-center p-4"
+          onClick={handleCloseModal}
+        >
+          <div 
+            className="relative max-w-[95vw] max-h-[95vh] w-full h-full"
+            onClick={(e) => e.stopPropagation()} // Evita que el clic en la imagen cierre el modal
+          >
+            {isImageLoading ? (
+              <div className="flex justify-center items-center w-full h-full text-white">
+                Cargando imagen...
+              </div>
+            ) : (
+              <Image
+                src={selectedImage}
+                alt="Imagen ampliada"
+                layout="fill"
+                objectFit="contain"
+                className="rounded-lg shadow-xl"
+              />
+            )}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-2 right-2 text-white text-3xl font-bold p-2 leading-none bg-black bg-opacity-50 rounded-full"
+              aria-label="Cerrar"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
