@@ -43,7 +43,7 @@ export default function Page() {
                                     );
 
                                     // Redirección al inicio
-                                    window.location.href = "/proyectos/jovenes-en-accion-por-rosa-blanca";
+                                    window.location.href = "/";
                                 } catch (error) {
                                     console.error("Error al enviar:", error);
                                     // Usar un modal o mensaje en lugar de alert()
@@ -255,7 +255,7 @@ export default function Page() {
                         Descubre los próximos eventos y actividades que estamos organizando para la comunidad.
                     </p>
                     <Link
-                        href="/cartelera"
+                        href="/actividades"
                         className="inline-block bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800 transition-colors"
                     >
                         Ver Actividades
