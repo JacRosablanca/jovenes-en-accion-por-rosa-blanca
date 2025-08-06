@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react"; // Eliminado useEffect ya que no se usa
 import Link from "next/link";
 import Image from "next/image";
 
@@ -15,7 +15,7 @@ type Actividad = {
 
 export default function ActividadesPage() {
   // Datos de actividades hardcodeados como ejemplo
-  const [actividades, setActividades] = useState<Actividad[]>([
+  const [actividades] = useState<Actividad[]>([
     {
       titulo: "Taller de Reciclaje Creativo",
       fecha: "2025-09-10",
@@ -57,16 +57,7 @@ export default function ActividadesPage() {
   const loading = false;
   const error = null;
 
-  // Función para limpiar celdas de errores de Google Sheets o espacios extra (se mantiene por si se vuelve a usar)
-  const cleanCell = (value: string): string => {
-    if (!value) return "";
-    if (/^#(NAME|REF|VALUE|DIV|N\/A)[!?/]*/i.test(value)) {
-      return "";
-    }
-    return value.trim();
-  };
-
-  // El useEffect para cargar datos ha sido eliminado ya que ahora son hardcodeados
+  // La función cleanCell ha sido eliminada ya que no se utiliza con datos hardcodeados
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-6">
