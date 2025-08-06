@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { APIKEY, SPREADSHEET_ID, SHEET_NAME_ACTIVIDADES } from "@/config/idSheets"; // Importa las constantes de tu idSheets.ts
 
@@ -12,7 +13,7 @@ type Actividad = {
   Fecha: string; // Columna 'Fecha' en tu hoja
   Hora: string; // Columna 'Hora' en tu hoja
   Lugar: string; // Columna 'Lugar' en tu hoja
-  // enlaceDetalle ya no está en los encabezados de tu hoja, así que lo quitamos si no es necesario
+  LinkFacebook?: string; // Nueva columna 'Link Facebook'
 };
 
 export default function ActividadesPage() {
@@ -20,8 +21,8 @@ export default function ActividadesPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Define el rango de la hoja de cálculo
-  const ACTIVIDADES_RANGE = `${SHEET_NAME_ACTIVIDADES}!A1:F`; // De A1 a F, para incluir todos los encabezados y datos
+  // Define el rango de la hoja de cálculo, ahora hasta la columna G para Link Facebook
+  const ACTIVIDADES_RANGE = `${SHEET_NAME_ACTIVIDADES}!A1:G`;
 
   // URL para obtener datos de Google Sheets API en formato JSON
   const SHEET_URL =
@@ -65,8 +66,7 @@ export default function ActividadesPage() {
               Fecha: rowObj["Fecha"] || "",
               Hora: rowObj["Hora"] || "",
               Lugar: rowObj["Lugar"] || "",
-              // enlaceDetalle no está en la hoja, así que no lo mapeamos aquí.
-              // Si lo necesitas, deberías añadir una columna en tu hoja.
+              LinkFacebook: rowObj["Link Facebook"] || "", // Mapea la nueva columna
             };
           });
           setActividades(parsedActividades);
@@ -136,19 +136,21 @@ export default function ActividadesPage() {
                   {actividad.Lugar && <p><strong>Lugar:</strong> {actividad.Lugar}</p>}
                 </div>
               )}
-              {/* Si tuvieras un enlaceDetalle en la hoja, lo renderizarías aquí */}
-              {/* Por ejemplo:
-              {actividad.enlaceDetalle && (
+              {actividad.LinkFacebook && (
                 <Link
-                  href={actividad.enlaceDetalle}
+                  href={actividad.LinkFacebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-block text-center px-4 py-2 bg-[#19295A] text-white rounded-lg hover:bg-[#1f3a7a] transition-colors"
+                  className="mt-4 inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold"
                 >
-                  Ver Detalles
+                  {/* Icono de Facebook (puedes reemplazarlo por un SVG o un icono de librería) */}
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14 13.5h2V16h-2v3h-3v-3H9v-2h2v-2c0-1.66 1.34-3 3-3h2v2h-2c-.55 0-1 .45-1 1v2z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                  </svg>
+                  Ver en Facebook
                 </Link>
               )}
-              */}
             </div>
           </div>
         ))}
