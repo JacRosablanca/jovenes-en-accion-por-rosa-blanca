@@ -136,7 +136,7 @@ export default function Page() {
                         </div>
                     </div>
                 )}
-                
+
                 {/* Modal de Documento */}
                 {showDocumentModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -227,10 +227,7 @@ export default function Page() {
 
                 {/* Botón de registro */}
                 <div className="mt-4 text-center">
-                    <button
-                        onClick={() => setShowModal(true)}
-                        className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-4 py-2 rounded-full font-semibold hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-                    >
+                    <button onClick={() => window.location.href='/registro'}>
                         ¡Regístrate para apoyar!
                     </button>
                 </div>
