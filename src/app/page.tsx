@@ -272,7 +272,7 @@ export default function Page() {
                         Conoce a las empresas y organizaciones que apoyan nuestras iniciativas.
                     </p>
                     <Link
-                        href="/apoyanos/patrocinadores" // Puedes crear esta ruta
+                        href="/patrocinadores" // Puedes crear esta ruta
                         className="inline-block bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 transition-colors"
                     >
                         Ver Patrocinadores
