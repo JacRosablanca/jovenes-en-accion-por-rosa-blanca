@@ -2,8 +2,8 @@ import React from 'react'
 import '@/styles/globals.css'
 
 export const metadata = {
-  title: 'Junta de Acción Comunal del Barrio de Rosa Blanca',
-  description: 'Sitio oficial de la Junta de Acción Comunal del barrio Rosa Blanca, promoviendo la participación ciudadana y el desarrollo comunitario.',
+  title: 'Jóvenes en Acción por Rosa Blanca',
+  description: 'Sitio oficial de los candidatos al CMJ GIRARDOT por la lista: Jóvenes en Acción por Rosa Blanca',
   icons: {
     icon: '/LogoJac.png', // Path to your favicon
   },
