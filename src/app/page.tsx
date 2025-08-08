@@ -224,13 +224,6 @@ export default function Page() {
                 <div className="mt-8 text-center text-base text-gray-700 dark:text-gray-200">
                     ¡Apoya a nuestros jóvenes y vota por una juventud que construye futuro!
                 </div>
-
-                {/* Botón de registro */}
-                <div className="mt-4 text-center">
-                    <button onClick={() => window.location.href='/registro'}>
-                        ¡Regístrate para apoyar!
-                    </button>
-                </div>
             </div>
         </div>
     );
