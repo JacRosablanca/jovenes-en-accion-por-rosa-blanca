@@ -40,8 +40,10 @@ export default function Navbar() {
                     <li><Link href="/sobre-nosotros" className="hover:text-blue-400 font-medium">Sobre Nosotros</Link></li>
                     <li>
                         <Link
-                            href="/registro"
+                            href="https://docs.google.com/forms/d/e/1FAIpQLSdkYJ3V0fbaEp6p0f1gwhiA09gGJqu9cOeLKUbkd8aIj0IpkQ/viewform"
                             className="bg-green-600 text-white py-2 px-4 rounded-full font-semibold hover:bg-green-800 transition-colors"
+                            target="_blank" // Nuevo: Abre el enlace en una nueva ventana/pestaña
+                            rel="noopener noreferrer" // Nuevo: Medida de seguridad para enlaces externos
                         >
                             Registrarme
                         </Link>
@@ -68,9 +70,11 @@ export default function Navbar() {
                         <li><Link href="/sobre-nosotros" onClick={() => setIsMenuOpen(false)}>Sobre Nosotros</Link></li>
                         <li>
                             <Link
-                                href="/registro"
+                                href="https://docs.google.com/forms/d/e/1FAIpQLSdkYJ3V0fbaEp6p0f1gwhiA09gGJqu9cOeLKUbkd8aIj0IpkQ/viewform"
                                 onClick={() => setIsMenuOpen(false)}
                                 className="bg-green-600 text-white py-2 px-4 rounded-full font-semibold hover:bg-green-800 transition-colors block text-center"
+                                target="_blank" // Nuevo: Abre el enlace en una nueva ventana/pestaña
+                                rel="noopener noreferrer" // Nuevo: Medida de seguridad para enlaces externos
                             >
                                 Registrarme
                             </Link>
