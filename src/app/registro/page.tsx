@@ -15,15 +15,6 @@ export default function RegistroPage() {
         const formElement = e.target as HTMLFormElement;
         const data = new FormData(formElement);
         
-        // Ajuste para el campo de Habilidad o Talento Especial
-        const selectedTalent = data.get("entry.2117185795");
-        if (selectedTalent) {
-            data.set("entry.2117185795", selectedTalent);
-        } else {
-            // Si no se selecciona nada, enviamos una cadena vacía o un valor por defecto
-            data.set("entry.2117185795", "");
-        }
-        
         // Lógica para separar la fecha de nacimiento
         const birthdate = data.get("entry.1091456214");
         if (birthdate) {
@@ -33,6 +24,21 @@ export default function RegistroPage() {
             data.set("entry.1091456214_day", dateParts[2]);
         }
         
+        // Manejo de la opción "Otros:" para Actividad Cultural
+        if (data.get("entry.2111191203") === "Otros:") {
+            data.set("entry.2111191203", "__other_option__");
+        }
+
+        // Manejo de la opción "Otros:" para Actividad Deportiva
+        if (data.get("entry.1670636493") === "Otros:") {
+            data.set("entry.1670636493", "__other_option__");
+        }
+        
+        // Manejo de la opción "Otros:" para Área de Interés
+        if (data.get("entry.1524387239") === "Otros:") {
+            data.set("entry.1524387239", "__other_option__");
+        }
+
         try {
             await fetch(
                 "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdkYJ3V0fbaEp6p0f1gwhiA09gGJqu9cOeLKUbkd8aIj0IpkQ/formResponse",
@@ -97,7 +103,6 @@ export default function RegistroPage() {
                 </select>
                 <input type="text" name="entry.808400725" placeholder="Si eres técnico, tecnólogo o profesional, dinos tu área de estudio o tu profesión" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white" />
                 
-                {/* Habilidad o Talento Especial (Corregido el nombre del campo) */}
                 <select name="entry.2117185795" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white">
                     <option value="">Habilidad o Talento Especial</option>
                     <option>Talento Académico</option>
@@ -108,7 +113,6 @@ export default function RegistroPage() {
                     <option>Talento Emocional</option>
                 </select>
                 
-                {/* Actividad Cultural con "Otros:" */}
                 <select name="entry.2111191203" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white" onChange={handleCulturalChange}>
                     <option value="">¿Practicas alguna actividad cultural?</option>
                     <option>Canto</option>
@@ -119,10 +123,9 @@ export default function RegistroPage() {
                     <option>Otros:</option>
                 </select>
                 {showOtherCultural && (
-                    <input type="text" name="entry.2111191203.other_option_responseS" placeholder="Especifica la actividad cultural" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white" required />
+                    <input type="text" name="entry.2111191203.other_option_response" placeholder="Especifica la actividad cultural" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white" required />
                 )}
 
-                {/* Actividad Deportiva con "Otros:" */}
                 <select name="entry.1670636493" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white" onChange={handleSportChange}>
                     <option value="">¿Practicas alguna actividad deportiva?</option>
                     <option>Fútbol</option>
@@ -138,7 +141,6 @@ export default function RegistroPage() {
                     <input type="text" name="entry.1670636493.other_option_response" placeholder="Especifica tu deporte" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white" required />
                 )}
 
-                {/* Áreas de Interés con "Otros:" */}
                 <select name="entry.1524387239" className="w-full p-2 border rounded dark:bg-[#2a2a2a] dark:text-white" onChange={handleAreaChange}>
                     <option value="">¿En qué áreas te gustaría participar o recibir formación?</option>
                     <option>Liderazgo</option>
