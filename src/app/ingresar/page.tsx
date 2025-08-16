@@ -27,7 +27,8 @@ export default function LoginPage() {
         setError(data.message || "Credenciales incorrectas");
       }
     } catch (err) {
-      setError("Error al conectar con el servidor");
+      console.error("Error en login:", err);
+      setError("Error interno al conectar con el servidor");
     }
   };
 
