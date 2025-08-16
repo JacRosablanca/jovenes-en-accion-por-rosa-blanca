@@ -1,44 +1,78 @@
-import React from 'react';
+"use client";
 
-export default function Ingresar() {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [usuario, setUsuario] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuario, contrasena }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        router.push(data.redirectUrl); // viene desde la columna C del sheet
+      } else {
+        setError(data.message || "Credenciales incorrectas");
+      }
+    } catch (err) {
+      setError("Error al conectar con el servidor");
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Iniciar Sesión</h1>
-        <form>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              Usuario o Correo Electrónico
-            </label>
+    <div className="flex items-center justify-center min-h-screen bg-gray-950 text-white">
+      <div className="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-800">
+        <h1 className="text-3xl font-bold mb-6 text-center text-white">
+          Ingresar
+        </h1>
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div>
+            <label className="block text-sm mb-1 text-gray-300">Usuario</label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
               type="text"
-              placeholder="Usuario"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              required
+              className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-blue-600 focus:outline-none"
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+          <div>
+            <label className="block text-sm mb-1 text-gray-300">
               Contraseña
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
               type="password"
-              placeholder="******************"
+              value={contrasena}
+              onChange={(e) => setContrasena(e.target.value)}
+              required
+              className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-blue-600 focus:outline-none"
             />
           </div>
-          <div className="flex items-center justify-between">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-            >
-              Ingresar
-            </button>
-            <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-              ¿Olvidaste tu contraseña?
-            </a>
-          </div>
+
+          {error && (
+            <p className="text-red-500 text-sm text-center font-semibold">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg bg-blue-700 hover:bg-blue-800 font-semibold transition-colors shadow-md"
+          >
+            Ingresar
+          </button>
         </form>
       </div>
     </div>

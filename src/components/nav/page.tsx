@@ -50,7 +50,7 @@ export default function Navbar() {
                     </li>
                     <li>
                         <Link
-                            href="/login"
+                            href="/ingresar"
                             className="bg-blue-800 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-900 transition-colors"
                         >
                             Ingresa

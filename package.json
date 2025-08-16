@@ -12,7 +12,7 @@
     "bcryptjs": "^3.0.2",
     "fs": "^0.0.1-security",
     "google-auth-library": "^10.2.0",
-    "googleapis": "^154.0.0",
+    "googleapis": "^154.1.0",
     "html2canvas": "^1.4.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.539.0",
