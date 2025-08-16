@@ -9,7 +9,7 @@ export default function Page() {
     const [showDocumentModal, setShowDocumentModal] = useState(false);
 
     return (
-        <div className="bg-gray-100 dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-200 font-sans">
+        <div className=" min-h-screen text-gray-800 dark:text-gray-200 font-sans">
             {/* Se inserta el componente Navbar aquí */}
 
             <div className="max-w-5xl mx-auto py-10 px-4 relative">

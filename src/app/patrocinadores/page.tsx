@@ -147,7 +147,7 @@ export default function PatrocinadoresPage() {
   }, [SHEET_URL]);
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-900 min-h-screen font-sans">
+    <div className=" min-h-screen font-sans">
       <div className="max-w-6xl mx-auto py-12 px-6">
         <h1 className="text-4xl font-extrabold text-center text-[#19295A] dark:text-blue-200 mb-8">
           Nuestros Patrocinadores
