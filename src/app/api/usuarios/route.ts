@@ -48,10 +48,9 @@ export async function GET() {
     });
 
     return NextResponse.json(usuarios);
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message || "Error desconocido" },
-      { status: 500 }
-    );
+  }  catch (err) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Error desconocido";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
