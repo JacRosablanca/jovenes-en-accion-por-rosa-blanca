@@ -77,7 +77,7 @@ export default function Navbar() {
                                     <ul className="py-2">
                                         <li>
                                             <Link
-                                                href="{`/panel/${numeroDocumento}/perfil`}"
+                                                href={`/panel/${usuario}/perfil`}
                                                 className="block px-4 py-2 hover:bg-gray-700 transition-colors"
                                             >
                                                 Mi perfil
@@ -86,7 +86,7 @@ export default function Navbar() {
                                         </li>
                                         <li>
                                             <Link
-                                                href="/panel/${numeroDocumento}"
+                                                href={`/panel/${usuario}`}
                                                 className="block px-4 py-2 hover:bg-gray-700 transition-colors"
                                             >
                                                 Panel
@@ -152,20 +152,12 @@ export default function Navbar() {
                                     <div className="mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
                                         <ul className="py-2">
                                             <li>
-                                                <Link
-                                                    href="/panel/${usuario}/perfil"
-                                                    onClick={() => setIsMenuOpen(false)}
-                                                    className="block px-4 py-2 hover:bg-gray-700 transition-colors"
-                                                >
+                                                <Link href={`/panel/${usuario}/perfil`}>
                                                     Mi perfil
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link
-                                                    href="/panel/${usuario}"
-                                                    onClick={() => setIsMenuOpen(false)}
-                                                    className="block px-4 py-2 hover:bg-gray-700 transition-colors"
-                                                >
+                                                <Link href={`/panel/${usuario}`}>
                                                     Panel
                                                 </Link>
                                             </li>
