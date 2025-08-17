@@ -15,14 +15,17 @@ export const SPREADSHEET_ID = "1Ab3Cy1ZBMtyeHbSSfJblQtFQg3YO-vpZnvHDCtSRxTM";
 // Nombre de las hojas (tabs dentro del Spreadsheet)
 export const SHEET_NAME_ACTIVIDADES = "Eventos";
 
-export const SHEET_NAME_DONACIONES ="Donaciones";
+export const SHEET_NAME_DONACIONES = "Donaciones";
 
-    export const SHEET_NAME_PATROCINADORES ="Patrocinadores";
+export const SHEET_NAME_PATROCINADORES = "Patrocinadores";
 
-    export const SHEET_NAME_USUARIOS ="Usuarios";
+export const SHEET_NAME_USUARIOS = "Usuarios";
 
-// Ejemplo de rango que quieras consultar
-export const RANGE_ACTIVIDADES = `${SHEET_NAME_ACTIVIDADES}`;
-export const RANGE_DONACIONES = `${SHEET_NAME_DONACIONES}`;
-export const RANGE_PATROCINADORES = `${SHEET_NAME_PATROCINADORES}`;
-export const RANGE_USUARIOS = `${SHEET_NAME_USUARIOS}`;
+export const SHEET_NAME_REGISTRO = "Registro de Jovenes";
+
+// Si quieres todas las columnas y filas de la hoja
+export const RANGE_ACTIVIDADES = `${SHEET_NAME_ACTIVIDADES}!A1:J`;
+export const RANGE_DONACIONES = `${SHEET_NAME_DONACIONES}!A1:E`;
+export const RANGE_PATROCINADORES = `${SHEET_NAME_PATROCINADORES}!A1:H`;
+export const RANGE_USUARIOS = `${SHEET_NAME_USUARIOS}!A1:C`;
+export const RANGE_REGISTRO = `${SHEET_NAME_REGISTRO}!A1:Q`;

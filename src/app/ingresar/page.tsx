@@ -22,7 +22,11 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        router.push(data.redirectUrl); // viene desde la columna C del sheet
+        // 🔹 Guardamos el usuario en localStorage
+        localStorage.setItem("usuario", usuario);
+
+        // 🔹 Redirigimos al panel
+        router.push(data.redirectUrl);
       } else {
         setError(data.message || "Credenciales incorrectas");
       }
@@ -33,7 +37,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-950 text-white">
+    <div className="flex items-center justify-center min-h-screen  text-white">
       <div className="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-800">
         <h1 className="text-3xl font-bold mb-6 text-center text-white">
           Ingresar
