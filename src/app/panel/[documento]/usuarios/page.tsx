@@ -30,10 +30,7 @@ export default function UsuariosPage() {
     try {
       const res = await fetch("/api/usuarios");
       if (!res.ok) throw new Error("Error al obtener usuarios");
-
       const data: Usuario[] = await res.json();
-      console.log("Usuarios desde API:", data); // Debug
-
       setUsuarios(data);
     } catch (err) {
       console.error("Error cargando usuarios", err);
@@ -108,27 +105,90 @@ export default function UsuariosPage() {
 
   // 🔹 Eliminar usuario
   const handleEliminar = async (id: string) => {
-    if (!confirm("¿Seguro que quieres eliminar este usuario?")) return;
-    try {
-      setProcesando(true);
-      const res = await fetch(`/api/usuarios/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Error eliminando usuario");
-      await cargarUsuarios();
-    } catch (err) {
-      console.error("Error eliminando usuario", err);
-    } finally {
-      setProcesando(false);
-    }
-  };
+  if (!confirm("¿Seguro que quieres eliminar este usuario?")) return;
+
+  try {
+    setProcesando(true);
+    const res = await fetch(`/api/usuarios/${id}`, { method: "DELETE" });
+    const data = await res.json(); // 🔹 leer el body del servidor
+    if (!res.ok) throw new Error(data.error || "Error eliminando usuario");
+    await cargarUsuarios();
+  } catch (err) {
+    console.error("Error eliminando usuario:", err);
+    alert(err); // 🔹 mostrar el error exacto
+  } finally {
+    setProcesando(false);
+  }
+};
+
 
   return (
     <div className="p-6 text-white">
+      {/* ==========================
+          FORMULARIO CREAR/EDITAR
+      ========================== */}
+      <div className="mb-8">
+        <h2 className="text-xl mb-2">{editando ? "Editar Usuario" : "Agregar Usuario"}</h2>
+
+        <div className="flex flex-wrap gap-2 mb-2">
+          <input
+            type="text"
+            placeholder="Documento"
+            value={nuevoUsuario.numeroDocumento}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, numeroDocumento: e.target.value })}
+            className="p-2 border rounded text-black"
+            disabled={!!editando}
+          />
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={nuevoUsuario.nombreCompleto}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, nombreCompleto: e.target.value })}
+            className="p-2 border rounded text-black"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={nuevoUsuario.email}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })}
+            className="p-2 border rounded text-black"
+          />
+          <input
+            type="text"
+            placeholder="Teléfono"
+            value={nuevoUsuario.telefono}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, telefono: e.target.value })}
+            className="p-2 border rounded text-black"
+          />
+          <select
+            value={nuevoUsuario.permisos}
+            onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, permisos: e.target.value })}
+            className="p-2 border rounded text-black"
+          >
+            <option value="">Seleccionar permisos</option>
+            <option value="Super Admin">Super Admin</option>
+            <option value="Admin">Admin</option>
+            <option value="Usuario">Usuario</option>
+          </select>
+        </div>
+
+        <button
+          onClick={editando ? handleGuardar : handleCrear}
+          disabled={procesando}
+          className={`px-4 py-2 rounded ${editando ? "bg-yellow-500 hover:bg-yellow-600" : "bg-green-600 hover:bg-green-700"} disabled:opacity-50`}
+        >
+          {editando ? "Guardar" : "Crear"}
+        </button>
+      </div>
+
+      {/* ==========================
+          TABLA DE USUARIOS
+      ========================== */}
       <h1 className="text-2xl font-bold mb-4">Usuarios Registrados</h1>
 
-      {cargando && <p className="text-gray-400">Cargando usuarios...</p>}
+      {cargando && <p className="text-gray-400 mb-2">Cargando usuarios...</p>}
 
-      {/* Tabla */}
-      <table className="w-full border border-gray-700 mt-4">
+      <table className="w-full border border-gray-700">
         <thead className="bg-gray-800">
           <tr>
             <th className="p-2">Documento</th>
@@ -167,70 +227,6 @@ export default function UsuariosPage() {
           ))}
         </tbody>
       </table>
-
-      {/* Formulario Crear/Editar */}
-      <div className="mt-6">
-        <h2 className="text-xl mb-2">{editando ? "Editar Usuario" : "Agregar Usuario"}</h2>
-
-        <input
-          type="text"
-          placeholder="Documento"
-          value={nuevoUsuario.numeroDocumento}
-          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, numeroDocumento: e.target.value })}
-          className="p-2 border rounded mr-2 text-black"
-          disabled={!!editando}
-        />
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={nuevoUsuario.nombreCompleto}
-          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, nombreCompleto: e.target.value })}
-          className="p-2 border rounded mr-2 text-black"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={nuevoUsuario.email}
-          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })}
-          className="p-2 border rounded mr-2 text-black"
-        />
-        <input
-          type="text"
-          placeholder="Teléfono"
-          value={nuevoUsuario.telefono}
-          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, telefono: e.target.value })}
-          className="p-2 border rounded mr-2 text-black"
-        />
-
-        <select
-          value={nuevoUsuario.permisos}
-          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, permisos: e.target.value })}
-          className="p-2 border rounded mr-2 text-black"
-        >
-          <option value="">Seleccionar permisos</option>
-          <option value="Super Admin">Super Admin</option>
-          <option value="Admin">Admin</option>
-          <option value="Usuario">Usuario</option>
-        </select>
-
-        {editando ? (
-          <button
-            onClick={handleGuardar}
-            disabled={procesando}
-            className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 disabled:opacity-50"
-          >
-            Guardar
-          </button>
-        ) : (
-          <button
-            onClick={handleCrear}
-            disabled={procesando}
-            className="bg-green-600 px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-          >
-            Crear
-          </button>
-        )}
-      </div>
     </div>
   );
 }

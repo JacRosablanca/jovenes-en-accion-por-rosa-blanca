@@ -18,80 +18,53 @@ async function getSheets() {
 }
 
 /* ================================
-   📌 PUT: Actualizar usuario
-================================ */
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+   DELETE: Eliminar usuario
+================================*/
+export async function DELETE(req: Request, context: { params: { id: string } }) {
   try {
-    const body = await req.json();
-    const { id } = params;
-
+    const { id } = context.params;
     const sheets = await getSheets();
+
+    // Obtener sheetId de la primera hoja
+    const meta = await sheets.spreadsheets.get({ spreadsheetId: SPREADSHEET_ID });
+    const sheet = meta.data.sheets?.[0];
+    if (!sheet?.properties?.sheetId) throw new Error("No se encontró sheetId");
+    const sheetId = sheet.properties.sheetId;
+
+    // Leer todas las filas
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: RANGE,
     });
 
     const rows = res.data.values || [];
-    const idx = rows.findIndex((row) => row[1] === id); // Documento en columna B
+    const idx = rows.findIndex((row) => row[1] === id); // Columna B = documento
+    if (idx === -1) return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
 
-    if (idx === -1) {
-      return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
-    }
-
-    // ✅ Actualizamos solo los campos recibidos
-    rows[idx][1] = body.numeroDocumento || rows[idx][1];
-    rows[idx][2] = body.nombreCompleto || rows[idx][2];
-    rows[idx][10] = body.permisos || rows[idx][10]; // Permisos (col K)
-    rows[idx][16] = body.email || rows[idx][16];    // Email (col Q)
-    rows[idx][17] = body.telefono || rows[idx][17]; // Teléfono (col R)
-
-    await sheets.spreadsheets.values.update({
+    // Eliminar fila con batchUpdate usando el sheetId correcto
+    await sheets.spreadsheets.batchUpdate({
       spreadsheetId: SPREADSHEET_ID,
-      range: `A${idx + 1}:R${idx + 1}`, // Fila exacta
-      valueInputOption: "USER_ENTERED",
-      requestBody: { values: [rows[idx]] },
+      requestBody: {
+        requests: [
+          {
+            deleteDimension: {
+              range: {
+                sheetId,
+                dimension: "ROWS",
+                startIndex: idx,
+                endIndex: idx + 1,
+              },
+            },
+          },
+        ],
+      },
     });
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("Error PUT usuario", err);
-    return NextResponse.json({ error: "Error actualizando usuario" }, { status: 500 });
-  }
+  console.error("Error DELETE usuario", err);
+  return NextResponse.json({
+    error: (err as Error)?.message || "Error eliminando usuario"
+  }, { status: 500 });
 }
-
-/* ================================
-   📌 DELETE: Eliminar usuario
-================================ */
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  try {
-    const { id } = params;
-    const sheets = await getSheets();
-
-    const res = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: RANGE,
-    });
-
-    const rows = res.data.values || [];
-    const idx = rows.findIndex((row) => row[1] === id); // Documento en col B
-
-    if (idx === -1) {
-      return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
-    }
-
-    // Eliminamos fila (dejando cabecera)
-    rows.splice(idx, 1);
-
-    await sheets.spreadsheets.values.update({
-      spreadsheetId: SPREADSHEET_ID,
-      range: RANGE,
-      valueInputOption: "USER_ENTERED",
-      requestBody: { values: rows },
-    });
-
-    return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error("Error DELETE usuario", err);
-    return NextResponse.json({ error: "Error eliminando usuario" }, { status: 500 });
-  }
 }
