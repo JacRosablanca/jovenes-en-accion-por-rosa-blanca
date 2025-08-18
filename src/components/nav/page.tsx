@@ -73,7 +73,7 @@ export default function Navbar() {
                                 Bienvenido, {usuario}
                             </button>
                             {isDropdownOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50">
+                                <div className="absolute right-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50">
                                     <ul className="py-2">
                                         <li>
                                             <Link
@@ -82,7 +82,6 @@ export default function Navbar() {
                                             >
                                                 Mi perfil
                                             </Link>
-
                                         </li>
                                         <li>
                                             <Link
@@ -90,6 +89,14 @@ export default function Navbar() {
                                                 className="block px-4 py-2 hover:bg-gray-700 transition-colors"
                                             >
                                                 Panel
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href={`/panel/${usuario}/usuarios`}
+                                                className="block px-4 py-2 hover:bg-gray-700 transition-colors"
+                                            >
+                                                Usuarios Registrados
                                             </Link>
                                         </li>
                                         <li>
@@ -149,16 +156,21 @@ export default function Navbar() {
                                     Bienvenido, {usuario}
                                 </button>
                                 {isDropdownOpen && (
-                                    <div className="mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+                                    <div className="mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
                                         <ul className="py-2">
                                             <li>
-                                                <Link href={`/panel/${usuario}/perfil`}>
+                                                <Link href={`/panel/${usuario}/perfil`} onClick={() => setIsMenuOpen(false)}>
                                                     Mi perfil
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href={`/panel/${usuario}`}>
+                                                <Link href={`/panel/${usuario}`} onClick={() => setIsMenuOpen(false)}>
                                                     Panel
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href={`/panel/${usuario}/usuarios`} onClick={() => setIsMenuOpen(false)}>
+                                                    Usuarios Registrados
                                                 </Link>
                                             </li>
                                             <li>
