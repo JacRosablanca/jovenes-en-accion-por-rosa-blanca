@@ -1,5 +1,4 @@
-// src/app/api/usuarios/[id]/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 import { SPREADSHEET_ID, GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY } from "@/config/idSheets";
 
@@ -13,23 +12,22 @@ async function getSheets() {
     },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
-
   return google.sheets({ version: "v4", auth });
 }
 
-/* ================================
-   DELETE: Eliminar usuario
-================================*/
-export async function DELETE(req: Request, context: { params: { id: string } }) {
+export async function DELETE(req: NextRequest) {
   try {
-    const { id } = context.params;
+    // Extraer el ID desde la URL
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop(); // último segmento
+    if (!id) return NextResponse.json({ error: "ID no proporcionado" }, { status: 400 });
+
     const sheets = await getSheets();
 
     // Obtener sheetId de la primera hoja
     const meta = await sheets.spreadsheets.get({ spreadsheetId: SPREADSHEET_ID });
-    const sheet = meta.data.sheets?.[0];
-    if (!sheet?.properties?.sheetId) throw new Error("No se encontró sheetId");
-    const sheetId = sheet.properties.sheetId;
+    const sheetId = meta.data.sheets?.[0]?.properties?.sheetId;
+    if (!sheetId) throw new Error("No se encontró sheetId");
 
     // Leer todas las filas
     const res = await sheets.spreadsheets.values.get({
@@ -38,10 +36,10 @@ export async function DELETE(req: Request, context: { params: { id: string } }) 
     });
 
     const rows = res.data.values || [];
-    const idx = rows.findIndex((row) => row[1] === id); // Columna B = documento
+    const idx = rows.findIndex((row) => row[1] === id);
     if (idx === -1) return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
 
-    // Eliminar fila con batchUpdate usando el sheetId correcto
+    // Eliminar fila
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: SPREADSHEET_ID,
       requestBody: {
