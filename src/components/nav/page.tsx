@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,25 +6,34 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+// Este componente obtiene los datos del usuario directamente de localStorage
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [nombre, setNombre] = useState<string | null>(null); // nombre real
   const [usuario, setUsuario] = useState<string | null>(null); // username/login
+  const [tipoUsuario, setTipoUsuario] = useState<string | null>(null); // tipo de usuario
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const storedNombre = localStorage.getItem("nombre"); // nombre real
-    const storedUsuario = localStorage.getItem("usuario"); // username/login
+    // Se obtiene el nombre, usuario y tipo de usuario de localStorage
+    const storedNombre = localStorage.getItem("nombre");
+    const storedUsuario = localStorage.getItem("usuario");
+    const storedTipoUsuario = localStorage.getItem("tipousuario");
+    
     if (storedNombre) setNombre(storedNombre);
     if (storedUsuario) setUsuario(storedUsuario);
+    if (storedTipoUsuario) setTipoUsuario(storedTipoUsuario);
+    
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("nombre");
     localStorage.removeItem("usuario");
+    localStorage.removeItem("tipousuario");
     setNombre(null);
     setUsuario(null);
+    setTipoUsuario(null);
     router.push("/ingresar");
   };
 
@@ -34,12 +42,17 @@ export default function Navbar() {
       {/* Barra superior */}
       <div className="max-w-6xl mx-auto flex justify-between items-center py-4 px-6 md:px-12">
         <Link href="/" className="flex items-center space-x-2 cursor-pointer">
+          {/* Se usa una imagen de marcador de posición si la original no está disponible */}
           <Image
             src="/LogoJac.png"
             alt="Logo"
             width={40}
             height={40}
             className="rounded-full"
+            onError={(e) => {
+              e.currentTarget.src = "https://placehold.co/40x40/000/fff?text=JA";
+              e.currentTarget.srcset = "";
+            }}
           />
           <span className="text-xl font-bold text-blue-200">
             Jóvenes en Acción Por Rosa Blanca
@@ -80,7 +93,8 @@ export default function Navbar() {
                   <ul className="py-2">
                     <li>
                       <Link
-                        href={`/panel/${usuario}/perfil`}
+                        // Se usan las props para generar la URL del perfil
+                        href={`/${tipoUsuario}/${usuario}/perfil`}
                         className="block px-4 py-2 hover:bg-gray-700 transition-colors"
                       >
                         Mi perfil
@@ -88,7 +102,8 @@ export default function Navbar() {
                     </li>
                     <li>
                       <Link
-                        href={`/panel/${usuario}`}
+                        // Se usa la ruta raíz del usuario como enlace al panel
+                        href={`/${tipoUsuario}/${usuario}/panel`}
                         className="block px-4 py-2 hover:bg-gray-700 transition-colors"
                       >
                         Panel
@@ -96,7 +111,8 @@ export default function Navbar() {
                     </li>
                     <li>
                       <Link
-                        href={`/panel/${usuario}/usuarios`}
+                        // Se usan las props para generar la URL de usuarios
+                        href={`/${tipoUsuario}/${usuario}/usuarios`}
                         className="block px-4 py-2 hover:bg-gray-700 transition-colors"
                       >
                         Usuarios Registrados
@@ -162,17 +178,17 @@ export default function Navbar() {
                   <div className="mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
                     <ul className="py-2">
                       <li>
-                        <Link href={`/panel/${usuario}/perfil`} onClick={() => setIsMenuOpen(false)}>
+                        <Link href={`/${tipoUsuario}/${usuario}/perfil`} onClick={() => setIsMenuOpen(false)}>
                           Mi perfil
                         </Link>
                       </li>
                       <li>
-                        <Link href={`/panel/${usuario}`} onClick={() => setIsMenuOpen(false)}>
+                        <Link href={`/${tipoUsuario}/${usuario}/panel`} onClick={() => setIsMenuOpen(false)}>
                           Panel
                         </Link>
                       </li>
                       <li>
-                        <Link href={`/panel/${usuario}/usuarios`} onClick={() => setIsMenuOpen(false)}>
+                        <Link href={`/${tipoUsuario}/${usuario}/usuarios`} onClick={() => setIsMenuOpen(false)}>
                           Usuarios Registrados
                         </Link>
                       </li>

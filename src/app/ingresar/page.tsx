@@ -22,11 +22,15 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        // 🔹 Guardamos ambos: usuario y nombre
+        // Guardamos los datos del usuario en localStorage para usarlos en el frontend
         localStorage.setItem("usuario", data.usuario);
         localStorage.setItem("nombre", data.nombre);
-
-        router.push(data.redirectUrl);
+        // Se guarda el tipo de usuario para construir rutas dinámicas
+        localStorage.setItem("tipousuario", data.tipoUsuario);
+        
+        // Se construye la URL de redirección dinámicamente
+        // Ahora, la URL de redirección es /super-admin/123456/panel
+        router.push(`/${data.tipoUsuario}/${data.usuario}/panel`);
       } else {
         setError(data.message || "Credenciales incorrectas");
       }
