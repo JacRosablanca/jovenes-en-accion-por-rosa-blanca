@@ -22,10 +22,10 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        // 🔹 Guardamos el usuario en localStorage
-        localStorage.setItem("usuario", usuario);
+        // 🔹 Guardamos ambos: usuario y nombre
+        localStorage.setItem("usuario", data.usuario);
+        localStorage.setItem("nombre", data.nombre);
 
-        // 🔹 Redirigimos al panel
         router.push(data.redirectUrl);
       } else {
         setError(data.message || "Credenciales incorrectas");
@@ -37,11 +37,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen  text-white">
+    <div className="flex items-center justify-center min-h-screen text-white">
       <div className="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-800">
-        <h1 className="text-3xl font-bold mb-6 text-center text-white">
-          Ingresar
-        </h1>
+        <h1 className="text-3xl font-bold mb-6 text-center text-white">Ingresar</h1>
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm mb-1 text-gray-300">Usuario</label>
@@ -54,9 +52,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm mb-1 text-gray-300">
-              Contraseña
-            </label>
+            <label className="block text-sm mb-1 text-gray-300">Contraseña</label>
             <input
               type="password"
               value={contrasena}
@@ -66,11 +62,7 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && (
-            <p className="text-red-500 text-sm text-center font-semibold">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-red-500 text-sm text-center font-semibold">{error}</p>}
 
           <button
             type="submit"

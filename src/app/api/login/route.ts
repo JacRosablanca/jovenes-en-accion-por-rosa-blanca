@@ -1,4 +1,3 @@
-// src/app/api/login/route.ts
 import { NextResponse } from "next/server";
 import { APIKEY, SPREADSHEET_ID, RANGE_USUARIOS } from "@/config/idSheets";
 
@@ -25,8 +24,7 @@ export async function POST(req: Request) {
     }
 
     const data = await res.json();
-    // quitamos la fila de cabecera
-    const rows = (data.values || []).slice(1);
+    const rows = (data.values || []).slice(1); // quitamos cabecera
 
     // buscar usuario (columna B → index 1) y contraseña (columna C → index 2)
     const user = rows.find(
@@ -34,9 +32,14 @@ export async function POST(req: Request) {
     );
 
     if (user) {
-      // url está en la columna D → index 3
-      const redirectUrl = user[3] || "/panel";
-      return NextResponse.json({ redirectUrl });
+      const nombre = user[0]; // Columna A
+      const redirectUrl = user[3] || "/panel"; // Columna D
+
+      return NextResponse.json({
+        redirectUrl,
+        usuario, // lo guardamos también
+        nombre,  // este será el visible
+      });
     }
 
     return NextResponse.json(
